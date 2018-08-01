@@ -56,8 +56,8 @@ if(isset($success))
 				?>
 
 				<li class="pull-right">
-					<button class='btn btn-default btn-sm modal-dlg' id='show_suspended_sales_button' data-href='<?php echo site_url($controller_name."/suspended"); ?>'
-							title='<?php echo $this->lang->line('sales_suspended_sales'); ?>'>
+					<button class='btn btn-default btn-sm modal-dlg' id='show_suspended_sales_button' data-href="<?php echo site_url($controller_name."/suspended"); ?>"
+							title="<?php echo $this->lang->line('sales_suspended_sales'); ?>">
 						<span class="glyphicon glyphicon-align-justify">&nbsp</span><?php echo $this->lang->line('sales_suspended_sales'); ?>
 					</button>
 				</li>
@@ -90,8 +90,8 @@ if(isset($success))
 					<span class="ui-helper-hidden-accessible" role="status"></span>
 				</li>
 				<li class="pull-right">
-					<button id='new_item_button' class='btn btn-info btn-sm pull-right modal-dlg' data-btn-new='<?php echo $this->lang->line('common_new') ?>' data-btn-submit='<?php echo $this->lang->line('common_submit')?>' data-href='<?php echo site_url("items/view"); ?>'
-							title='<?php echo $this->lang->line($controller_name . '_new_item'); ?>'>
+					<button id='new_item_button' class='btn btn-info btn-sm pull-right modal-dlg' data-btn-new="<?php echo $this->lang->line('common_new') ?>" data-btn-submit="<?php echo $this->lang->line('common_submit')?>" data-href="<?php echo site_url("items/view"); ?>"
+							title="<?php echo $this->lang->line($controller_name . '_new_item'); ?>">
 						<span class="glyphicon glyphicon-tag">&nbsp</span><?php echo $this->lang->line($controller_name. '_new_item'); ?>
 					</button>
 				</li>
@@ -133,6 +133,7 @@ if(isset($success))
 				foreach(array_reverse($cart, TRUE) as $line=>$item)
 				{
 			?>
+
 					<?php echo form_open($controller_name."/edit_item/$line", array('class'=>'form-horizontal', 'id'=>'cart_'.$line)); ?>
 						<tr>
 							<td>
@@ -207,7 +208,7 @@ if(isset($success))
 								}
 								?>
 							</td>
-							<td><a href="javascript:document.getElementById('<?php echo 'cart_'.$line ?>').submit();" title=<?php echo $this->lang->line('sales_update')?> ><span class="glyphicon glyphicon-refresh"></span></a></td>
+							<td><a href="javascript:document.getElementById("<?php echo 'cart_'.$line ?>").submit();" title=<?php echo $this->lang->line('sales_update')?> ><span class="glyphicon glyphicon-refresh"></span></a></td>
 							</tr>
 							<tr>
 							<?php
@@ -386,8 +387,8 @@ if(isset($success))
 					<label id="customer_label" for="customer" class="control-label" style="margin-bottom: 1em; margin-top: -1em;"><?php echo $this->lang->line('sales_select_customer') . ' ' . $customer_required; ?></label>
 					<?php echo form_input(array('name'=>'customer', 'id'=>'customer', 'class'=>'form-control input-sm', 'value'=>$this->lang->line('sales_start_typing_customer_name')));?>
 
-					<button class='btn btn-info btn-sm modal-dlg' data-btn-submit='<?php echo $this->lang->line('common_submit') ?>' data-href='<?php echo site_url("customers/view"); ?>'
-							title='<?php echo $this->lang->line($controller_name. '_new_customer'); ?>'>
+					<button class='btn btn-info btn-sm modal-dlg' data-btn-submit="<?php echo $this->lang->line('common_submit') ?>" data-href="<?php echo site_url("customers/view"); ?>"
+							title="<?php echo $this->lang->line($controller_name. '_new_customer'); ?>">
 						<span class="glyphicon glyphicon-user">&nbsp</span><?php echo $this->lang->line($controller_name. '_new_customer'); ?>
 					</button>
 
@@ -468,7 +469,7 @@ if(isset($success))
 						if($pos_mode == '1')
 						{
 						?>
-						<div class='btn btn-sm btn-success pull-right' id='finish_sale_button' tabindex='<?php echo ++$tabindex; ?>'><span class="glyphicon glyphicon-ok">&nbsp</span><?php echo $this->lang->line('sales_complete_sale'); ?></div>
+						<div class='btn btn-sm btn-success pull-right' id='finish_sale_button' tabindex="<?php echo ++$tabindex; ?>"><span class="glyphicon glyphicon-ok">&nbsp</span><?php echo $this->lang->line('sales_complete_sale'); ?></div>
 						<?php
 						}
 						?>
@@ -495,7 +496,7 @@ if(isset($success))
 						</table>
 					<?php echo form_close(); ?>
 
-					<div class='btn btn-sm btn-success pull-right' id='add_payment_button' tabindex='<?php echo ++$tabindex; ?>'><span class="glyphicon glyphicon-credit-card">&nbsp</span><?php echo $this->lang->line('sales_add_payment'); ?></div>
+					<div class='btn btn-sm btn-success pull-right' id='add_payment_button' tabindex="<?php echo ++$tabindex; ?>"><span class="glyphicon glyphicon-credit-card">&nbsp</span><?php echo $this->lang->line('sales_add_payment'); ?></div>
 				<?php
 				}
 				?>
@@ -646,11 +647,10 @@ $(document).ready(function()
 		$.ajax({
 			url: "<?php echo site_url('sales/change_item_number');?>",
 			method: 'post',
-			data: $.extend(csrf_form_base(),
-				{
-					"item_id" : item_id,
-					"item_number" : item_number,
-				}),
+			data: {
+				"item_id" : item_id,
+				"item_number" : item_number,
+			},
 			dataType: 'json'
 		});
 	});
@@ -661,11 +661,10 @@ $(document).ready(function()
 		$.ajax({
 			url: "<?php echo site_url('sales/change_item_name');?>",
 			method: 'post',
-			data: $.extend(csrf_form_base(),
-				{
-					"item_id" : item_id,
-					"item_name" : item_name,
-				}),
+			data: {
+				"item_id" : item_id,
+				"item_name" : item_name,
+			},
 			dataType: 'json'
 		});
 	});
@@ -676,11 +675,10 @@ $(document).ready(function()
 		$.ajax({
 			url: "<?php echo site_url('sales/change_item_description');?>",
 			method: 'post',
-			data: $.extend(csrf_form_base(),
-				{
-					"item_id" : item_id,
-					"item_description" : item_description,
-				}),
+			data: {
+				"item_id" : item_id,
+				"item_description" : item_description,
+			},
 			dataType: 'json'
 		});
 	});
@@ -692,9 +690,9 @@ $(document).ready(function()
 		$(this).val("<?php echo $this->lang->line('sales_start_typing_item_name'); ?>");
 	});
 
-	$("#item").autocomplete(
+	$('#item').autocomplete(
 	{
-		source: '<?php echo site_url($controller_name."/item_search"); ?>',
+		source: "<?php echo site_url($controller_name . '/item_search'); ?>",
 		minChars: 0,
 		autoFocus: false,
 		delay: 500,
@@ -732,7 +730,7 @@ $(document).ready(function()
 
 	$("#customer").autocomplete(
 	{
-		source: '<?php echo site_url("customers/suggest"); ?>',
+		source: "<?php echo site_url("customers/suggest"); ?>",
 		minChars: 0,
 		delay: 10,
 		select: function (a, ui) {
@@ -750,7 +748,7 @@ $(document).ready(function()
 
 	$(".giftcard-input").autocomplete(
 	{
-		source: '<?php echo site_url("giftcards/suggest"); ?>',
+		source: "<?php echo site_url("giftcards/suggest"); ?>",
 		minChars: 0,
 		delay: 10,
 		select: function (a, ui) {
@@ -761,7 +759,7 @@ $(document).ready(function()
 
 	$('#comment').keyup(function()
 	{
-		$.post('<?php echo site_url($controller_name."/set_comment");?>', {comment: $('#comment').val()});
+		$.post("<?php echo site_url($controller_name."/set_comment");?>", {comment: $('#comment').val()});
 	});
 
 	<?php
@@ -770,7 +768,7 @@ $(document).ready(function()
 	?>
 		$('#sales_invoice_number').keyup(function()
 		{
-			$.post('<?php echo site_url($controller_name."/set_invoice_number");?>', {sales_invoice_number: $('#sales_invoice_number').val()});
+			$.post("<?php echo site_url($controller_name."/set_invoice_number");?>", {sales_invoice_number: $('#sales_invoice_number').val()});
 		});
 
 		var enable_invoice_number = function()
@@ -785,7 +783,7 @@ $(document).ready(function()
 		$("#sales_invoice_enable").change(function()
 		{
 			var enabled = enable_invoice_number();
-			$.post('<?php echo site_url($controller_name."/set_invoice_number_enabled");?>', {sales_invoice_number_enabled: enabled});
+			$.post("<?php echo site_url($controller_name."/set_invoice_number_enabled");?>", {sales_invoice_number_enabled: enabled});
 		});
 	<?php
 	}
@@ -793,42 +791,42 @@ $(document).ready(function()
 
 	$("#sales_print_after_sale").change(function()
 	{
-		$.post('<?php echo site_url($controller_name."/set_print_after_sale");?>', {sales_print_after_sale: $(this).is(":checked")});
+		$.post("<?php echo site_url($controller_name."/set_print_after_sale");?>", {sales_print_after_sale: $(this).is(":checked")});
 	});
 
 	$("#price_work_orders").change(function()
 	{
-		$.post('<?php echo site_url($controller_name."/set_price_work_orders");?>', {price_work_orders: $(this).is(":checked")});
+		$.post("<?php echo site_url($controller_name."/set_price_work_orders");?>", {price_work_orders: $(this).is(":checked")});
 	});
 
 	$('#email_receipt').change(function()
 	{
-		$.post('<?php echo site_url($controller_name."/set_email_receipt");?>', {email_receipt: $(this).is(":checked")});
+		$.post("<?php echo site_url($controller_name."/set_email_receipt");?>", {email_receipt: $(this).is(":checked")});
 	});
 
 	$("#finish_sale_button").click(function()
 	{
-		$('#buttons_form').attr('action', '<?php echo site_url($controller_name."/complete"); ?>');
+		$('#buttons_form').attr('action', "<?php echo site_url($controller_name."/complete"); ?>");
 		$('#buttons_form').submit();
 	});
 
 	$("#finish_invoice_quote_button").click(function()
 	{
-		$('#buttons_form').attr('action', '<?php echo site_url($controller_name."/complete"); ?>');
+		$('#buttons_form').attr('action', "<?php echo site_url($controller_name."/complete"); ?>");
 		$('#buttons_form').submit();
 	});
 
 	$("#suspend_sale_button").click(function()
 	{
-		$('#buttons_form').attr('action', '<?php echo site_url($controller_name."/suspend"); ?>');
+		$('#buttons_form').attr('action', "<?php echo site_url($controller_name."/suspend"); ?>");
 		$('#buttons_form').submit();
 	});
 
 	$("#cancel_sale_button").click(function()
 	{
-		if(confirm('<?php echo $this->lang->line("sales_confirm_cancel_sale"); ?>'))
+		if(confirm("<?php echo $this->lang->line("sales_confirm_cancel_sale"); ?>"))
 		{
-			$('#buttons_form').attr('action', '<?php echo site_url($controller_name."/cancel"); ?>');
+			$('#buttons_form').attr('action', "<?php echo site_url($controller_name."/cancel"); ?>");
 			$('#buttons_form').submit();
 		}
 	});
@@ -918,7 +916,7 @@ function check_payment_type()
 		$("#sale_total").html("<?php echo to_currency($cash_total); ?>");
 		$("#sale_amount_due").html("<?php echo to_currency($cash_amount_due); ?>");
 		$("#amount_tendered_label").html("<?php echo $this->lang->line('sales_amount_tendered'); ?>");
-		$("#amount_tendered:enabled").val('<?php echo to_currency_no_money($cash_amount_due); ?>');
+		$("#amount_tendered:enabled").val("<?php echo to_currency_no_money($cash_amount_due); ?>");
 		$(".giftcard-input").attr('disabled', true);
 		$(".non-giftcard-input").attr('disabled', false);
 	}
@@ -927,7 +925,7 @@ function check_payment_type()
 		$("#sale_total").html("<?php echo to_currency($non_cash_total); ?>");
 		$("#sale_amount_due").html("<?php echo to_currency($non_cash_amount_due); ?>");
 		$("#amount_tendered_label").html("<?php echo $this->lang->line('sales_amount_tendered'); ?>");
-		$("#amount_tendered:enabled").val('<?php echo to_currency_no_money($non_cash_amount_due); ?>');
+		$("#amount_tendered:enabled").val("<?php echo to_currency_no_money($non_cash_amount_due); ?>");
 		$(".giftcard-input").attr('disabled', true);
 		$(".non-giftcard-input").attr('disabled', false);
 	}
