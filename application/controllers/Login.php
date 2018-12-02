@@ -41,16 +41,20 @@ class Login extends CI_Controller
 			return FALSE;
 		}
 
+		$this->load->library('migration');
+		if (!$this->migration->is_latest())
+		{
+			set_time_limit(1200);
+			// trigger any required upgrade before starting the application
+			$this->migration->latest();
+		}
+
 		if(!$this->Employee->login($username, $password))
 		{
 			$this->form_validation->set_message('login_check', $this->lang->line('login_invalid_username_and_password'));
 
 			return FALSE;
 		}
-
-		// trigger any required upgrade before starting the application
-		$this->load->library('migration');
-		$this->migration->latest();
 
 		return TRUE;
 	}

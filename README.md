@@ -118,7 +118,7 @@ Bug reports must follow this schema:
 2. OS name and version running your Web Server (e.g. CentOS 6.9, Ubuntu 16.4, Windows 10)
 3. Web Server name and version (e.g. Apache 2.2, Apache 2.4, Nginx 1.12, Nginx 1.13)
 4. Database name and version (e.g. MySQL 5.5, MySQL 5.6, MySQL 5.7, MariaDB 10.0, MariaDB 10.1, MariaDB 10.2)
-5. PHP version (e.g. 5.5, 5.6, 7.0, 7.1)
+5. PHP version (e.g. 5.6, 7.0, 7.1, 7.2)
 6. Language selected in OSPOS (e.g. English, Spanish)
 7. Any configuration of OSPOS that you changed
 8. Exact steps to reproduce the issue (test case)
@@ -133,7 +133,7 @@ FAQ
 
 * If you are seeing the message **system folder missing**, then you have cloned the source using git and you need to run a build *first*. Check [INSTALL.md](https://github.com/opensourcepos/opensourcepos/blob/master/INSTALL.md) for instructions or download latest zip file from [bintray](https://bintray.com/jekkos/opensourcepos/opensourcepos/view/files?sort=updated&order=desc#files) instead.
 
-* If at login time you read "The installation is not correct, check your php.ini file.", please check the error_log in public folder to understand what's wrong and make sure you read the [INSTALL.md](https://github.com/opensourcepos/opensourcepos/blob/master/INSTALL.md).
+* If at login time you read "The installation is not correct, check your php.ini file.", please check the error_log in public folder to understand what's wrong and make sure you read the [INSTALL.md](https://github.com/opensourcepos/opensourcepos/blob/master/INSTALL.md). To know how to enable error_log, please read the comment in [issue 1770](https://github.com/opensourcepos/opensourcepos/issues/1770#issuecomment-355177943).
 
 * If you installed your OSPOS under a web server subdir, please edit public/.htaccess and go to the lines with comment `if in web root` and `if in subdir comment above line, uncomment below one and replace <OSPOS path> with your path` and follow the instruction on the second comment line. If you face more issues please read [issue #920](https://github.com/opensourcepos/opensourcepos/issues/920) for more help.
 
@@ -144,3 +144,10 @@ FAQ
 * If you install ospos in docker behind a proxy that performs ssloffloading, you can enable the url generated to be https instead of http, by activating the environment variable FORCE_HTTPS = 1.
 
 * If you have suhosin installed and face an issue with CSRF, please make sure you read [issue #1492](https://github.com/opensourcepos/opensourcepos/issues/1492).
+
+Credits
+-------
+|JetBrains|Travis CI|
+|:-:|:-:|
+|![IntelliJ IDEA](https://raw.githubusercontent.com/wiki/j-easy/easy-batch/images/logo/intellijidea-logo.png)|[Travis CI](https://travis-ci.com/images/logos/TravisCI-Full-Color.png)|
+|Many thanks to [JetBrains](https://www.jetbrains.com/) for providing a free license of [IntelliJ IDEA](https://www.jetbrains.com/idea/) to kindly support the development of OSPOS|Many thanks to [Travis CI](https://travis-ci.org) for providing a free continuous integration service for open source projects.|

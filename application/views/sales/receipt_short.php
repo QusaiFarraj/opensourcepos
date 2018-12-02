@@ -66,7 +66,7 @@
 		{
 		?>
 			<tr>
-				<td><?php echo ucfirst($item['name']); ?></td>
+				<td><?php echo ucfirst($item['name'] . ' ' . $item['attribute_values']); ?></td>
 				<td><?php echo to_quantity_decimals($item['quantity']); ?></td>
 				<td class="total-value"><?php echo to_currency($item[($this->config->item('receipt_show_total_discount') ? 'total' : 'discounted_total')]); ?></td>
 			</tr>
@@ -93,12 +93,26 @@
 			{
 			?>
 				<tr>
-					<td colspan="2" class="discount"><?php echo number_format($item['discount'], 0) . " " . $this->lang->line("sales_discount_included")?></td>
-					<td class="total-value"><?php echo to_currency($item['discounted_total']) ; ?></td>
+					<?php
+					if($item['discount_type'] == FIXED)
+					{
+					?>
+						<td colspan="3" class="discount"><?php echo to_currency($item['discount']) . " " . $this->lang->line("sales_discount") ?></td>
+					<?php
+					}
+					elseif($item['discount_type'] == PERCENT)
+					{
+					?>
+						<td colspan="3" class="discount"><?php echo number_format($item['discount'], 0) . " " . $this->lang->line("sales_discount_included") ?></td>
+					<?php
+					}	
+					?>
+					<td class="total-value"><?php echo to_currency($item['discounted_total']); ?></td>
 				</tr>
 			<?php
 			}
 			?>
+
 		<?php
 		}
 		?>

@@ -285,6 +285,7 @@ class Config extends Secure_Controller
 	{
 		$batch_save_data = array(
 			'theme' => $this->input->post('theme'),
+			'default_sales_discount_type' => $this->input->post('default_sales_discount_type') != NULL,
 			'default_sales_discount' => $this->input->post('default_sales_discount'),
 			'enforce_privacy' => $this->input->post('enforce_privacy'),
 			'receiving_calculate_average_price' => $this->input->post('receiving_calculate_average_price') != NULL,
@@ -299,17 +300,7 @@ class Config extends Secure_Controller
 			'suggestions_third_column' => $this->input->post('suggestions_third_column'),
 			'giftcard_number' => $this->input->post('giftcard_number'),
 			'derive_sale_quantity' => $this->input->post('derive_sale_quantity') != NULL,
-			'multi_pack_enabled' => $this->input->post('multi_pack_enabled') != NULL,
-			'custom1_name' => $this->input->post('custom1_name'),
-			'custom2_name' => $this->input->post('custom2_name'),
-			'custom3_name' => $this->input->post('custom3_name'),
-			'custom4_name' => $this->input->post('custom4_name'),
-			'custom5_name' => $this->input->post('custom5_name'),
-			'custom6_name' => $this->input->post('custom6_name'),
-			'custom7_name' => $this->input->post('custom7_name'),
-			'custom8_name' => $this->input->post('custom8_name'),
-			'custom9_name' => $this->input->post('custom9_name'),
-			'custom10_name' => $this->input->post('custom10_name')
+			'multi_pack_enabled' => $this->input->post('multi_pack_enabled') != NULL
 		);
 
 		$this->Module->set_show_office_group($this->input->post('show_office_group') != NULL);

@@ -1,5 +1,4 @@
-<?php 
-
+<?php
 $lang["reports_all"] = "Todos";
 $lang["reports_canceled"] = "Cancelado";
 $lang["reports_categories"] = "Categorias";
@@ -7,7 +6,7 @@ $lang["reports_categories_summary_report"] = "Relatório Resumo de Categorias";
 $lang["reports_category"] = "Categoria";
 $lang["reports_code_canceled"] = "CNL";
 $lang["reports_code_invoice"] = "FAT";
-$lang["reports_code_pos"] = "";
+$lang["reports_code_pos"] = "POS";
 $lang["reports_code_quote"] = "Q";
 $lang["reports_code_return"] = "RET";
 $lang["reports_code_type"] = "Tipo";
@@ -121,3 +120,7 @@ $lang["reports_unit_price"] = "Preço Varejo";
 $lang["reports_used"] = "Pontos usados";
 $lang["reports_work_orders"] = "Ordens de trabalho";
 $lang["reports_zero_and_less"] = "Zero e menor";
+$lang["reports_low_sell_quantity"] = "Qtd de baixa venda";
+$lang["reports_total_low_sell_quantity"] = "Quantidade Total de Venda Baixa";
+$lang["reports_discount_type"] = "Tipo de desconto";
+$lang["reports_discount_fixed"] = "Desconto fixo";
