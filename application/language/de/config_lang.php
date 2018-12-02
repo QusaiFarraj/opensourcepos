@@ -2,7 +2,7 @@
 
 $lang["config_address"] = "Adresse";
 $lang["config_address_required"] = "Adresse ist erforderlich.";
-$lang["config_allow_duplicate_barcodes"] = "";
+$lang["config_allow_duplicate_barcodes"] = "Erlaube doppelte Barcodes";
 $lang["config_apostrophe"] = "Apostroph";
 $lang["config_backup_button"] = "Sicherung";
 $lang["config_backup_database"] = "Sicherungs-Datenbank";
@@ -181,6 +181,7 @@ $lang["config_msg_src"] = "SMS-API Sender ID";
 $lang["config_msg_src_required"] = "SMS-API Sender ID ist ein Pflichtfeld";
 $lang["config_msg_uid"] = "SMS-API Benutzername";
 $lang["config_msg_uid_required"] = "SMS-API Benutzername ist ein Pflichtfeld";
+$lang["config_multi_pack_enabled"] = "";
 $lang["config_none"] = "none";
 $lang["config_notify_alignment"] = "Benachrichtigungs Popup Position";
 $lang["config_number_format"] = "Zahlenformat";

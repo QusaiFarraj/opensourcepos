@@ -1,5 +1,4 @@
-<?php 
-
+<?php
 $lang["customers_available_points"] = "Pontos Disponíveis";
 $lang["rewards_package"] = "Recompensa";
 $lang["rewards_remaining_balance"] = "O valor restante dos pontos de recompensa é ";
@@ -28,8 +27,8 @@ $lang["sales_customer_discount"] = "Desconto";
 $lang["sales_customer_email"] = "e-mail";
 $lang["sales_customer_location"] = "Localização";
 $lang["sales_customer_mailchimp_status"] = "Status Mailchimp";
-$lang["sales_customer_optional"] = "";
-$lang["sales_customer_required"] = "";
+$lang["sales_customer_optional"] = "(Opcional)";
+$lang["sales_customer_required"] = "(Requerido)";
 $lang["sales_customer_total"] = "Total";
 $lang["sales_date"] = "Data Venda";
 $lang["sales_date_range"] = "Intervalo de datas";
@@ -44,7 +43,7 @@ $lang["sales_delete_unsuccessful"] = "Foi excluído com sucesso uma venda.";
 $lang["sales_description_abbrv"] = "Descrição.";
 $lang["sales_discard"] = "Descartar";
 $lang["sales_discard_quote"] = "";
-$lang["sales_discount"] = "Desc. %";
+$lang["sales_discount"] = "Desconto";
 $lang["sales_discount_included"] = "% Desconto";
 $lang["sales_discount_short"] = "%";
 $lang["sales_due"] = "Vencimento";
@@ -84,7 +83,7 @@ $lang["sales_must_enter_numeric"] = "Deve entrar valor numérico para montante d
 $lang["sales_must_enter_numeric_giftcard"] = "Deve entrar valor numérico para o número de cartão presente.";
 $lang["sales_new_customer"] = "Novo Cliente";
 $lang["sales_new_item"] = "Novo Item";
-$lang["sales_no_description"] = "Nenhum";
+$lang["sales_no_description"] = "Sem descrição";
 $lang["sales_no_filter"] = "Todos";
 $lang["sales_no_items_in_cart"] = "Não há itens na cesta.";
 $lang["sales_no_sales_to_display"] = "Sem vendas para mostrar.";
@@ -108,7 +107,7 @@ $lang["sales_quote_number_duplicate"] = "O número de cotação deve ser exclusi
 $lang["sales_quote_sent"] = "Cotação enviada para";
 $lang["sales_quote_unsent"] = "As cotações não foram enviadas para";
 $lang["sales_receipt"] = "Vendas";
-$lang["sales_receipt_no_email"] = "";
+$lang["sales_receipt_no_email"] = "Este cliente não possui um endereço de email válido.";
 $lang["sales_receipt_number"] = "Venda nº";
 $lang["sales_receipt_sent"] = "Enviar recibo para";
 $lang["sales_receipt_unsent"] = "Recibo não devem ser enviados para";

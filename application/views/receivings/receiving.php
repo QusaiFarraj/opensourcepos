@@ -86,8 +86,8 @@ if (isset($success))
 				</li>
 				<li class="pull-right">
 					<button id='new_item_button' class='btn btn-info btn-sm pull-right modal-dlg'
-						data-btn-new='<?php echo $this->lang->line('common_new') ?>'
 						data-btn-submit='<?php echo $this->lang->line('common_submit') ?>'
+						data-btn-new='<?php echo $this->lang->line('common_new') ?>'
 						data-href='<?php echo site_url("items/view"); ?>'
 						title='<?php echo $this->lang->line('sales_new_item'); ?>'>
 						<span class="glyphicon glyphicon-tag">&nbsp</span><?php echo $this->lang->line('sales_new_item'); ?>
@@ -136,7 +136,7 @@ if (isset($success))
 							<td><?php echo anchor($controller_name."/delete_item/$line", '<span class="glyphicon glyphicon-trash"></span>');?></td>
 							<td><?php echo $item['item_number']; ?></td>
 							<td style="align:center;">
-								<?php echo $item['name']; ?><br /> <?php echo '[' . to_quantity_decimals($item['in_stock']) . ' in ' . $item['stock_name'] . ']'; ?>
+								<?php echo $item['name'] . ' ' . $item['attribute_values']; ?><br /> <?php echo '[' . to_quantity_decimals($item['in_stock']) . ' in ' . $item['stock_name'] . ']'; ?>
 								<?php echo form_hidden('location', $item['item_location']); ?>
 							</td>
 
@@ -165,18 +165,26 @@ if (isset($success))
 							if ($items_module_allowed && $mode!='requisition')
 							{
 							?>
-								<td><?php echo form_input(array('name'=>'discount', 'class'=>'form-control input-sm', 'value'=>$item['discount']));?></td>
+								<td>
+								<div class="input-group">
+									<?php echo form_input(array('name'=>'discount', 'class'=>'form-control input-sm', 'value'=>to_decimals($item['discount'], 0), 'onClick'=>'this.select();')); ?>
+									<span class="input-group-btn">
+										<?php echo form_checkbox(array('id'=>'discount_toggle', 'name'=>'discount_toggle', 'value'=>1, 'data-toggle'=>"toggle",'data-size'=>'small', 'data-onstyle'=>'success', 'data-on'=>'<b>'.$this->config->item('currency_symbol').'</b>', 'data-off'=>'<b>%</b>', 'data-line'=>$line, 'checked'=>$item['discount_type'])); ?>
+									</span>
+								</div> 
+							</td>
 							<?php
 							}
 							else
 							{
 							?>
-								<td><?php echo $item['discount']; ?></td>
+								<td><?php echo $item['discount'];?></td>
 								<?php echo form_hidden('discount',$item['discount']); ?>
 							<?php
 							}
 							?>
-							<td><?php echo to_currency($item['price']*$item['quantity']*$item['receiving_quantity']-$item['price']*$item['quantity']*$item['receiving_quantity']*$item['discount']/100); ?></td> 
+							<td>
+							<?php echo to_currency(($item['discount_type'] == PERCENT) ? $item['price']*$item['quantity']*$item['receiving_quantity'] - $item['price'] * $item['quantity'] * $item['receiving_quantity'] * $item['discount'] / 100 : $item['price']*$item['quantity']*$item['receiving_quantity'] - $item['discount']); ?></td> 
 							<td><a href="javascript:$('#<?php echo 'cart_'.$line ?>').submit();" title=<?php echo $this->lang->line('receivings_update')?> ><span class="glyphicon glyphicon-refresh"></span></a></td>
 						</tr>
 						<tr>
@@ -209,7 +217,7 @@ if (isset($success))
 								}
 								?>
 							</td>
-							<td colspan='6'></td>
+							<td colspan='7'></td>
 						</tr>
 					<?php echo form_close(); ?>
 			<?php
@@ -487,12 +495,12 @@ $(document).ready(function()
 		{
 			if (resource.match(/suppliers$/))
 			{
-				$("#supplier").attr("value",response.id);
+				$("#supplier").val(response.id);
 				$("#select_supplier_form").submit();
 			}
 			else
 			{
-				$("#item").attr("value",response.id);
+				$("#item").val(response.id);
 				if (stay_open)
 				{
 					$("#add_item_form").ajaxSubmit();
@@ -508,6 +516,12 @@ $(document).ready(function()
 	$('[name="price"],[name="quantity"],[name="receiving_quantity"],[name="discount"],[name="description"],[name="serialnumber"]').change(function() {
 		$(this).parents("tr").prevAll("form:first").submit()
 	});
+
+	$('[name="discount_toggle"]').change(function() {
+		var input = $("<input>").attr("type", "hidden").attr("name", "discount_type").val(($(this).prop('checked'))?1:0);
+		$('#cart_'+ $(this).attr('data-line')).append($(input));
+		$('#cart_'+ $(this).attr('data-line')).submit();
+    });
 
 });
 

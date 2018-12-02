@@ -318,10 +318,25 @@ class Reports extends Secure_Controller
 		$this->load->view('reports/tabular', $data);
 	}
 
-	//Summary Discounts report
-	public function summary_discounts($start_date, $end_date, $sale_type, $location_id = 'all')
+	public function summary_discounts_input()
 	{
-		$inputs = array('start_date' => $start_date, 'end_date' => $end_date, 'sale_type' => $sale_type, 'location_id' => $location_id);
+		$data = array();
+		$stock_locations = $data = $this->xss_clean($this->Stock_location->get_allowed_locations('sales'));
+		$stock_locations['all'] = $this->lang->line('reports_all');
+		$data['stock_locations'] = array_reverse($stock_locations, TRUE);
+		$data['mode'] = 'sale';
+		$data['discount_type_options'] = array(
+			'0' => $this->lang->line('reports_discount_percent'),
+			'1'=> $this->lang->line('reports_discount_fixed'));
+		$data['sale_type_options'] = $this->get_sale_type_options();
+
+		$this->load->view('reports/date_input', $data);
+	}
+
+	//Summary Discounts report
+	public function summary_discounts($start_date, $end_date, $sale_type, $location_id = 'all', $discount_type=0)
+	{
+		$inputs = array('start_date' => $start_date, 'end_date' => $end_date, 'sale_type' => $sale_type, 'location_id' => $location_id,'discount_type'=>$discount_type);
 
 		$this->load->model('reports/Summary_discounts');
 		$model = $this->Summary_discounts;
@@ -333,7 +348,8 @@ class Reports extends Secure_Controller
 		foreach($report_data as $row)
 		{
 			$tabular_data[] = $this->xss_clean(array(
-				'discount' => $row['discount_percent'],
+				'total' => to_currency($row['total']),
+				'discount' => $row['discount'],
 				'count' => $row['count']
 			));
 		}
@@ -706,9 +722,9 @@ class Reports extends Secure_Controller
 	}
 
 	//Graphical summary discounts report
-	public function graphical_summary_discounts($start_date, $end_date, $sale_type, $location_id = 'all')
+	public function graphical_summary_discounts($start_date, $end_date, $sale_type, $location_id = 'all', $discount_type=0)
 	{
-		$inputs = array('start_date' => $start_date, 'end_date' => $end_date, 'sale_type' => $sale_type, 'location_id' => $location_id);
+		$inputs = array('start_date' => $start_date, 'end_date' => $end_date, 'sale_type' => $sale_type, 'location_id' => $location_id,'discount_type'=>$discount_type);
 
 		$this->load->model('reports/Summary_discounts');
 		$model = $this->Summary_discounts;
@@ -722,7 +738,7 @@ class Reports extends Secure_Controller
 		{
 			$row = $this->xss_clean($row);
 
-			$labels[] = $row['discount_percent'];
+			$labels[] = $row['discount'];
 			$series[] = $row['count'];
 		}
 
@@ -734,7 +750,7 @@ class Reports extends Secure_Controller
 			'series_data_1' => $series,
 			'summary_data_1' => $summary,
 			'yaxis_title' => $this->lang->line('reports_count'),
-			'xaxis_title' => $this->lang->line('reports_discount_percent'),
+			'xaxis_title' => $this->lang->line('reports_discount'),
 			'show_currency' => FALSE
 		);
 
@@ -869,7 +885,7 @@ class Reports extends Secure_Controller
 					to_currency($drow['total']),
 					to_currency($drow['cost']),
 					to_currency($drow['profit']),
-					$drow['discount_percent'].'%'));
+					($drow['discount_type'] == PERCENT)? $drow['discount'].'%':to_currency($drow['discount'])));
 			}
 
 			if(isset($report_data['rewards'][$key]))
@@ -980,7 +996,7 @@ class Reports extends Secure_Controller
 					to_currency($drow['total']),
 					to_currency($drow['cost']),
 					to_currency($drow['profit']),
-					$drow['discount_percent'].'%'));
+					($drow['discount_type'] == PERCENT)? $drow['discount'].'%':to_currency($drow['discount'])));
 			}
 
 			if(isset($report_data['rewards'][$key]))
@@ -1018,6 +1034,9 @@ class Reports extends Secure_Controller
 			$discounts[$i] = $i . '%';
 		}
 		$data['specific_input_data'] = $discounts;
+		$data['discount_type_options'] = array(
+			'0' => $this->lang->line('reports_discount_percent'),
+			'1'=> $this->lang->line('reports_discount_fixed'));
 		$data['sale_type_options'] = $this->get_sale_type_options();
 
 		$data = $this->xss_clean($data);
@@ -1025,9 +1044,9 @@ class Reports extends Secure_Controller
 		$this->load->view('reports/specific_input', $data);
 	}
 
-	public function specific_discount($start_date, $end_date, $discount, $sale_type)
+	public function specific_discount($start_date, $end_date, $discount, $sale_type, $discount_type)
 	{
-		$inputs = array('start_date' => $start_date, 'end_date' => $end_date, 'discount' => $discount, 'sale_type' => $sale_type);
+		$inputs = array('start_date' => $start_date, 'end_date' => $end_date, 'discount' => $discount, 'sale_type' => $sale_type, 'discount_type' => $discount_type);
 
 		$this->load->model('reports/Specific_discount');
 		$model = $this->Specific_discount;
@@ -1085,7 +1104,7 @@ class Reports extends Secure_Controller
 					to_currency($drow['total']),
 					to_currency($drow['cost']),
 					to_currency($drow['profit']),
-					$drow['discount_percent'].'%'));
+					($drow['discount_type'] == PERCENT)? $drow['discount'].'%':to_currency($drow['discount'])));
 			}
 
 			if(isset($report_data['rewards'][$key]))
@@ -1172,14 +1191,19 @@ class Reports extends Secure_Controller
 
 	public function detailed_sales($start_date, $end_date, $sale_type, $location_id = 'all')
 	{
-		$inputs = array('start_date' => $start_date, 'end_date' => $end_date, 'sale_type' => $sale_type, 'location_id' => $location_id);
+		$definition_names = $this->Attribute->get_definitions_by_flags(Attribute::SHOW_IN_SALES);
+
+		$inputs = array('start_date' => $start_date, 'end_date' => $end_date, 'sale_type' => $sale_type, 'location_id' => $location_id, 'definition_ids' => array_keys($definition_names));
 
 		$this->load->model('reports/Detailed_sales');
 		$model = $this->Detailed_sales;
 
 		$model->create($inputs);
 
-		$headers = $this->xss_clean($model->getDataColumns());
+		$columns = $model->getDataColumns();
+		$columns['details'] = array_merge($columns['details'], $definition_names);
+
+		$headers = $this->xss_clean($columns);
 
 		$report_data = $model->getData($inputs);
 
@@ -1227,7 +1251,11 @@ class Reports extends Secure_Controller
 				{
 					$quantity_purchased .= ' [' . $this->Stock_location->get_location_name($drow['item_location']) . ']';
 				}
-				$details_data[$row['sale_id']][] = $this->xss_clean(array(
+
+				$attribute_values = (isset($drow['attribute_values'])) ? $drow['attribute_values'] : '';
+				$attribute_values = expand_attribute_values($definition_names, $attribute_values);
+
+				$details_data[$row['sale_id']][] = $this->xss_clean(array_merge(array(
 					$drow['name'],
 					$drow['category'],
 					$drow['serialnumber'],
@@ -1238,7 +1266,8 @@ class Reports extends Secure_Controller
 					to_currency($drow['total']),
 					to_currency($drow['cost']),
 					to_currency($drow['profit']),
-					$drow['discount_percent'].'%'));
+					($drow['discount_type'] == PERCENT)? $drow['discount'].'%':to_currency($drow['discount'])), $attribute_values));
+
 			}
 
 			if(isset($report_data['rewards'][$key]))
@@ -1294,14 +1323,19 @@ class Reports extends Secure_Controller
 
 	public function detailed_receivings($start_date, $end_date, $receiving_type, $location_id = 'all')
 	{
-		$inputs = array('start_date' => $start_date, 'end_date' => $end_date, 'receiving_type' => $receiving_type, 'location_id' => $location_id);
+		$definition_names = $this->Attribute->get_definitions_by_flags(Attribute::SHOW_IN_RECEIVINGS);
+
+		$inputs = array('start_date' => $start_date, 'end_date' => $end_date, 'receiving_type' => $receiving_type, 'location_id' => $location_id, 'definition_ids' => array_keys($definition_names));
 
 		$this->load->model('reports/Detailed_receivings');
 		$model = $this->Detailed_receivings;
 
 		$model->create($inputs);
 
-		$headers = $this->xss_clean($model->getDataColumns());
+		$columns = $model->getDataColumns();
+		$columns['details'] = array_merge($columns['details'], $definition_names);
+
+		$headers = $this->xss_clean($columns);
 		$report_data = $model->getData($inputs);
 
 		$summary_data = array();
@@ -1334,13 +1368,18 @@ class Reports extends Secure_Controller
 				{
 					$quantity_purchased .= ' [' . $this->Stock_location->get_location_name($drow['item_location']) . ']';
 				}
-				$details_data[$row['receiving_id']][] = $this->xss_clean(array(
+
+				$attribute_values = (isset($drow['attribute_values'])) ? $drow['attribute_values'] : '';
+				$attribute_values = expand_attribute_values($definition_names, $attribute_values);
+
+				$details_data[$row['receiving_id']][] = $this->xss_clean(array_merge(array(
 					$drow['item_number'],
 					$drow['name'],
 					$drow['category'],
 					$quantity_purchased,
 					to_currency($drow['total']),
-					$drow['discount_percent'].'%'));
+					($drow['discount_type'] == PERCENT)? $drow['discount'].'%':to_currency($drow['discount'])), $attribute_values));
+
 			}
 		}
 

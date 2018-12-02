@@ -1,5 +1,10 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
+const DEFAULT_LANGUAGE = 'english';
+const DEFAULT_LANGUAGE_CODE = 'en-US';
+
+define('DEFAULT_DATETIME', mktime(0, 0, 0, 1, 1, 2010));
+
 /**
  * Currency locale helper
  */
@@ -11,14 +16,16 @@ function current_language_code($load_system_language = FALSE)
 	// Returns the language code of the employee if set or system language code if not
 	if($employee->is_logged_in() && $load_system_language != TRUE)
 	{
-		$employee_language_code = $employee->get_logged_in_employee_info()->language_code;
-		if($employee_language_code != NULL && $employee_language_code != '')
+		$employee_info = $employee->get_logged_in_employee_info();
+
+		if(property_exists($employee_info, 'language_code') && !empty($employee_info->language_code))
 		{
-			return $employee_language_code;
+			return $employee_info->language_code;
 		}
 	}
 
-	return get_instance()->config->item('language_code');
+	$language_code = get_instance()->config->item('language_code');
+	return empty($language_code) ? DEFAULT_LANGUAGE_CODE : $language_code;
 }
 
 function current_language($load_system_language = FALSE)
@@ -28,14 +35,15 @@ function current_language($load_system_language = FALSE)
 	// Returns the language of the employee if set or system language if not
 	if($employee->is_logged_in() && $load_system_language != TRUE)
 	{
-		$employee_language = $employee->get_logged_in_employee_info()->language;
-		if($employee_language != NULL && $employee_language != '')
+		$employee_info = $employee->get_logged_in_employee_info();
+		if(property_exists($employee_info, 'language') && !empty($employee_info->language))
 		{
-			return $employee_language;
+			return $employee_info->language;
 		}
 	}
 
-	return get_instance()->config->item('language');
+	$language = get_instance()->config->item('language');
+	return empty($language) ? DEFAULT_LANGUAGE : $language;
 }
 
 function get_languages()
@@ -63,7 +71,8 @@ function get_languages()
 		'th:thai' => 'Thai',
 		'tr:turkish' => 'Turkish',
 		'vi:vietnamese' => 'Vietnamese',
-		'zh:simplified-chinese' => 'Chinese'
+		'zh-Hans:simplified-chinese' => 'Chinese Simplified Script',
+		'zh-Hant:traditional-chinese' => 'Chinese Traditional Script'
 	);
 }
 
@@ -206,6 +215,7 @@ function get_timeformats()
 	);
 }
 
+
 /*
 Gets the payment options
 */
@@ -215,6 +225,7 @@ function get_payment_options()
 	$lang = get_instance()->lang;
 
 	$payments = array();
+
 
 	if($config->item('payment_options_order') == 'debitcreditcash')
 	{
@@ -289,6 +300,13 @@ function tax_decimals()
 	$config = get_instance()->config;
 
 	return $config->item('tax_decimals') ? $config->item('tax_decimals') : 0;
+}
+
+function to_datetime($datetime)
+{
+	$config = get_instance()->config;
+
+	return date($config->item('dateformat') . ' ' . $config->item('timeformat'), $datetime);
 }
 
 function to_currency($number)

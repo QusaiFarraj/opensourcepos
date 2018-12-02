@@ -46,6 +46,12 @@
 			</div>
 		</div>
 
+		<div id="attributes">
+			<script type="text/javascript">
+				$('#attributes').load('<?php echo site_url("items/attributes/$item_info->item_id");?>');
+			</script>
+		</div>
+
 		<?php if ($item_kits_enabled == '1'): ?>
 		<div class="form-group form-group-sm">
 			<?php echo form_label($this->lang->line('items_stock_type'), 'stock_type', !empty($basic_version) ? array('class'=>'required control-label col-xs-3') : array('class'=>'control-label col-xs-3')); ?>
@@ -364,7 +370,6 @@
 								'name'=>'low_sell_item_name',
 								'id'=>'low_sell_item_name',
 								'class'=>'form-control input-sm',
-								'size'=>'50',
 								'value'=>$selected_low_sell_item)
 						); ?>
 						<?php echo form_hidden('low_sell_item_id', $selected_low_sell_item_id);?>
@@ -387,30 +392,6 @@
 			</div>
 		</div>
 
-		<?php
-		for ($i = 1; $i <= 10; ++$i)
-		{
-		?>
-			<?php
-			if($this->config->item('custom'.$i.'_name') != NULL)
-			{
-				$item_arr = (array)$item_info;
-			?>
-				<div class="form-group form-group-sm">
-					<?php echo form_label($this->config->item('custom'.$i.'_name'), 'custom'.$i, array('class'=>'control-label col-xs-3')); ?>
-					<div class='col-xs-8'>
-						<?php echo form_input(array(
-								'name'=>'custom'.$i,
-								'id'=>'custom'.$i,
-								'class'=>'form-control input-sm',
-								'value'=>$item_arr['custom'.$i])
-								);?>
-					</div>
-				</div>
-		<?php
-			}
-		}
-		?>
 	</fieldset>
 <?php echo form_close(); ?>
 
@@ -420,7 +401,7 @@ $(document).ready(function()
 {
 	$('#new').click(function() {
 		stay_open = true;
-		$('#item_form').submit();
+		$("#item_form").submit();
 	});
 
 	$('#submit').click(function() {
@@ -434,7 +415,7 @@ $(document).ready(function()
 	};
 
 	$('#low_sell_item_name').autocomplete({
-		source: "<?php echo site_url("items/suggest_low_sell"); ?>",
+		source: "<?php echo site_url('items/suggest_low_sell'); ?>",
 		minChars: 0,
 		delay: 15,
 		cacheLength: 1,
@@ -443,66 +424,44 @@ $(document).ready(function()
 		focus: fill_value
 	});
 
-	var no_op = function(event, data, formatted){};
-	$('#category').autocomplete({
-		source: "<?php echo site_url('items/suggest_category'); ?>",
-		appendTo: '.modal-content',
-		delay: 10
+	$("#category").autocomplete({
+		source: "<?php echo site_url('items/suggest_category');?>",
+		delay: 10,
+		appendTo: '.modal-content'
 	});
-
-	<?php for ($i = 1; $i <= 10; ++$i)
-	{
-	?>
-		$('#custom' + <?php echo $i; ?>).autocomplete({
-			source:function (request, response) {
-				$.ajax({
-					type: 'POST',
-					url: "<?php echo site_url('items/suggest_custom'); ?>",
-					dataType: 'json',
-					data: $.extend(request, {field_no: <?php echo $i; ?>}),
-					success: function(data) {
-						response($.map(data, function(item) {
-							return {
-								value: item.label
-							};
-						}))
-					}
-				});
-			},
-			delay: 10,
-			appendTo: '.modal-content'});
-	<?php
-	}
-	?>
 
 	$('a.fileinput-exists').click(function() {
 		$.ajax({
 			type: 'GET',
-			url: "<?php echo site_url($controller_name . '/remove_logo/' . $item_info->item_id); ?>",
+			url: "<?php echo site_url('$controller_name/remove_logo/$item_info->item_id'); ?>",
 			dataType: 'json'
 		})
 	});
+
+	$.validator.addMethod('valid_chars', function(value, element) {
+		return value.match(/(\||:)/g) == null;
+	}, "<?php echo $this->lang->line('attributes_attribute_value_invalid_chars'); ?>");
 
 	$('#item_form').validate($.extend({
 		submitHandler: function(form, event) {
 			$(form).ajaxSubmit({
 				success: function(response) {
 					var stay_open = dialog_support.clicked_id() != 'submit';
-					if (stay_open)
+					if(stay_open)
 					{
 						// set action of item_form to url without item id, so a new one can be created
-						$('#item_form').attr('action', "<?php echo site_url($controller_name . '/save')?>");
+						$('#item_form').attr('action', "<?php echo site_url('items/save/')?>");
 						// use a whitelist of fields to minimize unintended side effects
-						$(':text, :password, :file, #description, #item_form').not('.quantity, #reorder_level, #tax_name_1,' +
-							'#tax_percent_name_1, #reference_number, #name, #cost_price, #unit_price, #taxed_cost_price, #taxed_unit_price').val('');
+						$(':text, :password, :file, #description, #item_form').not('.quantity, #reorder_level, #tax_name_1, #receiving_quantity, ' +
+							'#tax_percent_name_1, #category, #reference_number, #name, #cost_price, #unit_price, #taxed_cost_price, #taxed_unit_price, #definition_name, [name^="attribute_links"]').val('');
 						// de-select any checkboxes, radios and drop-down menus
-						$(':input', '#item_form').not('#item_category_id').removeAttr('checked').removeAttr('selected');
+						$(':input', '#item_form').removeAttr('checked').removeAttr('selected');
 					}
 					else
 					{
 						dialog_support.hide();
 					}
-					table_support.handle_submit("<?php echo site_url($controller_name); ?>", response, stay_open);
+					table_support.handle_submit('<?php echo site_url('items'); ?>', response, stay_open);
 				},
 				dataType: 'json'
 			});
@@ -522,10 +481,11 @@ $(document).ready(function()
 					url: "<?php echo site_url($controller_name . '/check_item_number')?>",
 					type: 'POST',
 					data: {
-						"item_id": "<?php echo $item_info->item_id; ?>",
-						"item_number": function() {
-							return $("#item_number").val();
-						}
+						'item_id' : "<?php echo $item_info->item_id; ?>",
+						'item_number' : function()
+						{
+							return $('#item_number').val();
+						},
 					}
 				}
 			},
@@ -614,3 +574,4 @@ $(document).ready(function()
 	}, form_support.error));
 });
 </script>
+

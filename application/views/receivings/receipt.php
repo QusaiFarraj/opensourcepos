@@ -78,7 +78,7 @@
 		{
 		?>
 			<tr>
-				<td><?php echo $item['name']; ?></td>
+				<td><?php echo $item['name'] . ' ' . $item['attribute_values']; ?></td>
 				<td><?php echo to_currency($item['price']); ?></td>
 				<td><?php echo to_quantity_decimals($item['quantity']) . " " . ($show_stock_locations ? " [" . $item['stock_name'] . "]" : ""); 
 				?>&nbsp;&nbsp;&nbsp;x <?php echo $item['receiving_quantity'] != 0 ? to_quantity_decimals($item['receiving_quantity']) : 1; ?></td>
@@ -92,7 +92,20 @@
 			{
 			?>
 				<tr>
-					<td colspan="3" style="font-weight: bold;"> <?php echo number_format($item['discount'], 0) . " " . $this->lang->line("sales_discount_included")?> </td>
+					<?php
+					if($item['discount_type'] == FIXED)
+					{
+					?>
+						<td colspan="3" class="discount"><?php echo to_currency($item['discount']) . " " . $this->lang->line("sales_discount") ?></td>
+					<?php
+					}
+					elseif($item['discount_type'] == PERCENT)
+					{
+					?>
+						<td colspan="3" class="discount"><?php echo number_format($item['discount'], 0) . " " . $this->lang->line("sales_discount_included") ?></td>
+					<?php
+					}	
+					?>
 				</tr>
 			<?php
 			}
